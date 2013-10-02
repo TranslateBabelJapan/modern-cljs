@@ -1,28 +1,27 @@
 # Tutorial 1 - The basic
 
-In the first tutorial you are going to create and configure a very basic
-[CLJS][1] project using [leiningen 2][2] and [lein-cljsbuild][3] plugin.
+まず始めに、[leiningen 2][2]と[lein-cljsbuild][3]というプラグインを使って、
+[CLJS][1]の基本的なプロジェクトを作ってみよう。
 
-[Leiningen][2] is a build management system for CLJ
-projects. [lein-cljsbuild][3] is a leiningen plugin specialized in
-managing CLJS projects.
+[Leiningen][2]は、Clojureのためのビルド管理システムだ。[lein-cljsbuild][3]は
+ClojureScriptに特化したLeiningenのプラグインだ。
 
-## Create a Clojure (CLJ) project
+## ClojureのProjectを作ろう！
 
-If not already done, install [leiningen][2] and create a new project
-named `modern-cljs`.
+まだ何もやっていないのなら、まずは[leiningen][2]をインストールしよう。そして
+新しいプロジェクトを作ろう。名前は`modern-cljs`だ。
 
 ```bash
 lein new modern-cljs
 ```
 
-I'm assuming that you added `lein` to your `$PATH` environment variable.
+お節介だけど、`lein`を環境変数として`$PATH`に入れることをお薦めしよう。
 
-## Modify the project structure
+## プロジェクトの構成をかえてみよう！
 
-Create the directories to host both CLJ and CLJS source files and rename
-the leiningen generated `src/modern_cljs` directory to reflect the new
-directory structure.
+ClojureとClojureScriptをホストするためのディレクトリを作ろう。そして、
+Leiningenが作った`src/modern_cljs`のディレクトリを新しい構成のディレクトリに
+反映させよう。
 
 ```bash
 cd modern-cljs
@@ -34,14 +33,15 @@ mv src/modern_cljs/ src/clj/
 > special characters) in package names, substitute an underscore for any hyphen
 > in corresponding directory names.
 
-Create a directory structure to host static resources of the project
-(i.e., html pages, js script files, css stylesheet files, etc.)
+
+プロジェクトに静的ファイルをおいておくためのディレクトリも作っておこう。
+(例えば、htmlのページとか、JavaScriptとか、CSSとか、ね）
 
 ```bash
 mkdir -p resources/public/{js,css}
 ```
 
-You should end up with the following directory structure
+最後に、下のようなディレクトリ構成になればいい。
 
 ```bash
 ├── LICENSE
@@ -68,12 +68,13 @@ You should end up with the following directory structure
 
 ## Edit project.clj
 
-You now need to edit `project.clj` to:
+でだ。`project.clj`を編集する必要が出てくる。というのも:
 
-* update the `source-paths` of CLJ source code of the project;
-* add and configure [lein-cljsbuild][3] plugin in `project.clj`.
 
-Here is the original leiningen generated `project.clj`
+* プロジェクトにある`source-paths`のClojureのソースコードをアップデートするため。
+* [lein-cljsbuild][3]のプラグインを`project.clj`の設定に追加するため。
+
+Leiningenが作成した`project.clj`がそこにあるはずだ。
 
 ```clojure
 (defproject modern-cljs "0.1.0-SNAPSHOT"
@@ -84,8 +85,8 @@ Here is the original leiningen generated `project.clj`
   :dependencies [[org.clojure/clojure "1.5.1"]])
 ```
 
-And here is the updated version where we added the `lein-cljsbuild`
-plugin, the `:cljsbuild` and the `:source-paths` configurations
+そこに`lein-cljsbuild`のアップデートされたバージョンを置いて、`:cljsbuild`と
+`:source-paths`の設定をするんだ。
 
 ```clojure
 (defproject modern-cljs "0.1.0-SNAPSHOT"
@@ -117,10 +118,10 @@ plugin, the `:cljsbuild` and the `:source-paths` configurations
                            :pretty-print true}}]})
 ```
 
-## Create a CLJS source file
+## ClojureScriptのソースファイルを作ろう
 
-After having configured `project.clj`, create a CLJS file inside
-`src/cljs/modern_cljs` directory with the following code
+`project.clj`を設定したあと、ClojureScriptのファイルを、`src/cljs/modern_cljs`ディレクトリに
+作ろう。下のようなファイルだ。
 
 ```clojure
 (ns modern-cljs.modern)
@@ -128,16 +129,17 @@ After having configured `project.clj`, create a CLJS file inside
 (.write js/document "Hello, ClojureScript!")
 ```
 
+これを`modern.cljs`というファイル名で保存しよう。
 Save the file as `modern.cljs`.
 
-> NOTE 3: Please note that the filename extension for ClojureScript source
-> code is *cljs*, not *clj*.
+> ノート3: ClojureScriptのソースコードは*.cljsであって、*.cljではないことに
+> 注意しよう。
 
-## Create an HTML page
+## Htmlファイルもう
 
-Create a simple html file and include a `script` tag pointing to the value
-of `:output-to` keyword of `project.clj`. Save the file as `simple.html` in
-`resources/public/` directory.
+シンプルなHtmlを作って、そこに`project.clj`にあった`:output-to`キーワードの値である
+ポイントの`script`タグを入れよう。それを`resources/public/`ディレクトリの中に、
+`simple.html`の中にセーブしよう。
 
 ```html
 <!doctype html>
@@ -156,10 +158,10 @@ of `:output-to` keyword of `project.clj`. Save the file as `simple.html` in
 </html>
 ```
 
-## Compile CLJS
+## ClojureSciptをコンパイルしよう
 
-To compile CLJS to JS, use the `once` subtask of `cljsbuild` as
-follow:
+ClojureからJavaScriptにするために、下のように`cljsbuild`のサブタスクである
+`once`を使おう。
 
 ```bash
 lein cljsbuild once
@@ -174,13 +176,11 @@ Compiling "resources/public/js/modern.js" from ["src/cljs"]...
 Successfully compiled "resources/public/js/modern.js" in 7.131854 seconds.
 ```
 
-As you can see, you received a *WARNING* saying that, even if the
-`cljsbuild` plugin is able to provide you a CLJS release, it is
-strongly recommended to explicitly add a specific CLJS release in the
-`:dependencies` section of the `project.clj` file.
+見ての通り、*WARNING*といっている。これは、`cljsbuild`プラグインは、ClojureScriptがどんなにリリース
+されていたとしても、`project.clj`ファイルの`:dependencies`の部分に、特定のClojureScriptを使うように
+強く薦めているのだ。
 
-Let's add an explicit CLJS release into the project `:dependencies`
-section to make `cljsbuild` happy.
+というわけで、ClojureScriptを`:depedencies`に入れることで、`cljsbuild`は幸せな気持ちになれるでしょう！
 
 ```clj
 (defproject modern-cljs "0.1.0-SNAPSHOT"
@@ -193,8 +193,8 @@ section to make `cljsbuild` happy.
 > NOTE 4: we added the latest CLJS release (i.e. "0.0-1878") available
 > at the time of this writing.
 
-Now issue the `lein cljsbuild clean` command to clean the previous
-compilation and ssue the `lein cljsbuild once` command again.
+`lein cljbuild clean` コマンドは、以前の問題を綺麗にしてくれる
+そして`lein cljsbuild once`をもう一度たたいてみよう。
 
 ```clj
 lein cljsbuild clean
@@ -211,10 +211,10 @@ Compiling "resources/public/js/modern.js" from ["src/cljs"]...
 Successfully compiled "resources/public/js/modern.js" in 6.894774 seconds.
 ```
 
-## Visit simple.html
+## simple.htmlを見てみよう
 
-Open a browser and visit the local file `simple.html`. If everything
-went ok, you should see "Hello, ClojureScript!".
+ブラウザを開いて、ローカルファイルの`simple.html`を見てみよう。
+全て上手くいっているなら、"Hello, ClojureScipt!"の文字が見えるだろう。
 
 ![Hello ClojureScript][5]
 
