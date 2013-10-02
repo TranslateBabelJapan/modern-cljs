@@ -66,7 +66,7 @@ mkdir -p resources/public/{js,css}
 12 directories, 6 files
 ```
 
-## Edit project.clj
+## project.cljを編集しよう！
 
 でだ。`project.clj`を編集する必要が出てくる。というのも:
 
@@ -130,7 +130,6 @@ Leiningenが作成した`project.clj`がそこにあるはずだ。
 ```
 
 これを`modern.cljs`というファイル名で保存しよう。
-Save the file as `modern.cljs`.
 
 > ノート3: ClojureScriptのソースコードは*.cljsであって、*.cljではないことに
 > 注意しよう。
@@ -180,7 +179,7 @@ Successfully compiled "resources/public/js/modern.js" in 7.131854 seconds.
 されていたとしても、`project.clj`ファイルの`:dependencies`の部分に、特定のClojureScriptを使うように
 強く薦めているのだ。
 
-というわけで、ClojureScriptを`:depedencies`に入れることで、`cljsbuild`は幸せな気持ちになれるでしょう！
+というわけで、ClojureScriptを`:depedencies`に入れることで、`cljsbuild`は幸せな気持ちになる！
 
 ```clj
 (defproject modern-cljs "0.1.0-SNAPSHOT"
