@@ -135,7 +135,7 @@ Save the file as `modern.cljs`.
 > ノート3: ClojureScriptのソースコードは*.cljsであって、*.cljではないことに
 > 注意しよう。
 
-## Htmlファイルもう
+## Htmlファイルも作ろう
 
 シンプルなHtmlを作って、そこに`project.clj`にあった`:output-to`キーワードの値である
 ポイントの`script`タグを入れよう。それを`resources/public/`ディレクトリの中に、
