@@ -1,4 +1,19 @@
-# modern-cljs
+# modern-cljs 日本語訳プロジェクト
+
+## 翻訳完了したものたち
+
+
+## [Tutorial 1 - 基本的なこと][5]
+
+最初のチュートリアルでは、基本的なClojureScriptのプロジェクトを作り、
+設定するところから始める。
+
+## [Tutorial 2 - ブラウザでClojureScript!! (bREPL)][6]
+
+このチュートリアルでは、ClojureScriptのREPLを、外部http-serverを立ち上げることで
+ブラウザと接続する方法を学ぶ。
+
+## 以下、もとのブランチから
 
 A series of tutorials to guide you in creating and setting up
 [ClojureScript][1] (CLJS) projects.
@@ -89,15 +104,6 @@ run the latest available tutorial without coding:
 > * `cd modern-cljs`
 > * `git checkout tutorial-01 # for tutorial 1, tutorial-02 for tutorial 2 etc `
 
-## [Tutorial 1 - The basic][5]
-
-In the first tutorial you are going to create and configure a very basic
-CLJS project.
-
-## [Tutorial 2 - Browser CLJS REPL (bREPL)][6]
-
-In this tutorial you are going to set up a browser connected CLJS REPL
-(bRepl) using an external http-server.
 
 ## [Tutorial 3 - CLJ based http-server][7]
 
@@ -211,8 +217,8 @@ License, the same as Clojure.
 [2]: https://github.com/technomancy/leiningen
 [3]: http://localhost:3000/login-dbg.html
 [4]: http://localhost:3000/shopping-dbg.html
-[5]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-01.md
-[6]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-02.md
+[5]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-01.md
+[6]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-02.md
 [7]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-03.md
 [8]: https://github.com/mmcgrana/ring.git
 [9]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-04.md
