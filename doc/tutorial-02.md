@@ -5,23 +5,22 @@
 
 ## 始めに
 
-Clojureのようなdialect(esehara: 保留) LISPを使う大きな目的の一つに、
+ClojureのようなLISP方言を使う大きな目的の一つに、
 対話的なプログラミングスタイルを可能にしてくれるREPL(読んで評価して表示
-の輪(Read Eval Print Loop))の存在がある。ClojureScriptコミュニティーは
+のループ(Read Eval Print Loop))の存在がある。ClojureScriptコミュニティーは
 Clojureに存在する、REPLベースのプログラミング・エクスペリエンスを提供する
 ために、熱心に作業を続けていて、ブラウザの中にあるJavaScriptエンジンに
 ClojureScriptのREPLをコネクトするための方法を作り出した。
 このプログラミングスタイルは、ClojureScriptをREPLの中で評価できるようにし、
 REPLを接続したブラウザで、即時にフィードバックを得られる。
 
-Due to browser-imposed limitations to prevent [cross site scripting][1]
-attacks, the REPL connection with the browser embedded JS engine has to
-respect the [Same Origin Policy][2]. This means that, if we
-want to enable a browser-connected CLJS REPL (brepl), we need to set up
-a local http-server.
+[cross site scripting][1]攻撃を予防するためのブラウザの読み込み制限の結果、
+JavaScriptエンジンが組み込まれたブラウザでREPLに接続することは、
+[Same Origin Policy][2]を尊重しなければならなくなった。どういうことかといえば、
+もしClojureScriptのREPL(brepl)にブラウザが接続したければ、ローカルにhttp-serverを
+設置する必要があるということだ。
 
-
-どんなhttp-serverだって使える。ただ、このチュートリアルでは、Mac OS Xのために
+どんなhttp-serverだって使うことはできる。ただ、このチュートリアルでは、Mac OS Xのために
 用意された[MAMP][4]にある、[apache http-server][3]を使う。というのも、とても
 簡単に設定が出来て、簡単に立ち上げることができるからだ。他のOSでは、同じような選択肢が必要だ。
 
@@ -56,7 +55,7 @@ git checkout -b tutorial-02-step-1
 
 ## MAMPをインストール、設定、そして立ち上げ！
 
-MAMPをインストールするために、MAMPのドキュメントをみ様。そして、Admin GUI
+MAMPをインストールするために、MAMPのドキュメントをみよう。そして、Admin GUI
 の設定ボタンをクリックしよう。
 
 ![MAMP Admin Panel][6]
