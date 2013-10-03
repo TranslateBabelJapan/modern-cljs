@@ -1,18 +1,18 @@
-# Tutorial 2 - Browser CLJS REPL (bREPL)
+# Tutorial 2 - ブラウザでClojureScript!! (bREPL)
 
-In this tutorial you are going to set up a browser connected CLJS REPL
-(bRepl) using an external http-server.
+このチュートリアルでは、外部のhttp-serverを利用した、ClojureScriptのREPLに
+ブラウザで接続する方法(bRepl)を学ぶ。
 
-## Introduction
+## 始めに
 
-One of the main reasons to use a LISP dialect like CLJ is its REPL
-(Read Eval Print Loop), which enables a very interactive style of
-programming. CLJS communities are still working very hard to bring
-into CLJS the same REPL-based programming experience available in CLJ,
-and created a way to connect a CLJS REPL to the JS engine embedded in
-the browser. This style of programming allows you to evaluate CLJS
-forms in the REPL and have immediate feedback in the browser to which
-the REPL is connected.
+Clojureのようなdialect(esehara: 保留) LISPを使う大きな目的の一つに、
+対話的なプログラミングスタイルを可能にしてくれるREPL(読んで評価して表示
+の輪(Read Eval Print Loop))の存在がある。ClojureScriptコミュニティーは
+Clojureに存在する、REPLベースのプログラミング・エクスペリエンスを提供する
+ために、熱心に作業を続けていて、ブラウザの中にあるJavaScriptエンジンに
+ClojureScriptのREPLをコネクトするための方法を作り出した。
+このプログラミングスタイルは、ClojureScriptをREPLの中で評価できるようにし、
+REPLを接続したブラウザで、即時にフィードバックを得られる。
 
 Due to browser-imposed limitations to prevent [cross site scripting][1]
 attacks, the REPL connection with the browser embedded JS engine has to
@@ -20,31 +20,29 @@ respect the [Same Origin Policy][2]. This means that, if we
 want to enable a browser-connected CLJS REPL (brepl), we need to set up
 a local http-server.
 
-You can use any http-server. In this tutorial we're going to use the
-[apache http-server][3], which is included in [MAMP][4] for Mac OS X
-operating system, because it's very easy to be configured and run. There
-should be similar options for others OSs.
 
-> NOTE 1: a very handy and portable http-server is python module
-> `SimpleHTTPServer`. If you have python installed on your operating
-> system just launch it as follows:
->
+どんなhttp-serverだって使える。ただ、このチュートリアルでは、Mac OS Xのために
+用意された[MAMP][4]にある、[apache http-server][3]を使う。というのも、とても
+簡単に設定が出来て、簡単に立ち上げることができるからだ。他のOSでは、同じような選択肢が必要だ。
+
+> ノート1: とても手軽で、コンパクトなhtt-serverとして、Pythonのmoduleである
+> `SImpleHttpServer`がある。もしOSにPythonをインストールしているならば、ただ
+> 下のように立ち上げればよい。
 > ```bash
 > cd /path/to/modern-cljs/resources/public
 > python -m SimpleHTTPServer 8888
 > Serving HTTP on 0.0.0.0 port 8888 ...
 > ```
 >
-> Thanks to [Max Penet][5] for the suggestion.
->
+> [Max Penet][5]の提案である。ありがとう！
 
-> NOTE 2: as we'll see in the [next tutorial][11] the clojurean way to
-> start an HTTP server is to use [Ring][17] and [Compojure][18].
+> ノート2: 私たちは[次のチュートリアル][11]で、Clojurenのために、[Ring][17]と
+> [Compojure][18]を利用したHTTPサーバーの立ち上げ方を見ていく。
 
 ## Preamble
 
-If you want to start working from the end of the [previous tutorial][8],
-assuming you've [git][16] installed, do as follows.
+前のチュートリアルを終わらせて、今回のチュートリアルを始めたいのならば、
+お節介ながらに[git][16]をインストールして、下のことをやろう。
 
 ```bash
 git clone https://github.com/magomimmo/modern-cljs.git
@@ -53,38 +51,35 @@ git checkout tutorial-01
 git checkout -b tutorial-02-step-1
 ```
 
-This way you're cloning the tutorial-01 branch into a new branch to
-start working with.
+これは、今回のチュートリアルを始めるために、Tutorial01ブランチを作り、
+そこから新しいブランチを作る方法だ。
 
-## Install, configure and run MAMP
+## MAMPをインストール、設定、そして立ち上げ！
 
-Follow MAMP documentation to install MAMP. Start MAMP and click the
-Preferences button of its Admin GUI.
+MAMPをインストールするために、MAMPのドキュメントをみ様。そして、Admin GUI
+の設定ボタンをクリックしよう。
 
 ![MAMP Admin Panel][6]
 
-Then click the Apache tab to choose
-`/path/to/modern-cljs/resources/public` as root directory of your local
-Apache http server. Click ok. Finally click `Start Servers` button to
-start everything. Now you have a local web server running on your
-machine at port `8888`. Visit [simple.html][7] you created in
-[Tutorial 1 - The Basic][8] using `http://localhost:8888/simple.html`
-to verify that everything is ok.
+そして、Apache tabをクリックして、ローカルのApache http serverのルートディレクトリ
+として、`/path/to/modern-cljs/resources/public`を選ぼう。で、OKをクリックだ。最終的に
+`Start Servers`で全てやってくれる。これで、ローカルWebサーバーが、マシンの`8888`ポート上で
+動くことになる。`http://localhost:8888/simple.html`を使って
+[Tutorial 1 - The Basic][8]で作った[simple.html][7]を見に行って、
+全てOKか確認しよう。
 
-## Setting up a browser connected CLJS REPL (brepl)
+## ClojureScriptのREPL(brepl)に接続するために、ブラウザを設定しよう。
 
-To set up a brepl, we need to follow a few steps:
+breplを設定するために、下のステップを実行する必要がある。
 
-* create a CLJS file to predispose the connection between the browser
-  and the brepl
-* compile the CLJS file
-* start the brepl server
-* enable the connection
+* ブラウザとbprelの間との接続をpredisposeするためのClojureScriptを作る
+* ClojureScriptをコンパイルする
+* breplサーバーをスターとさせる
+* 接続できるようにする
 
-### Create the connection
+### コネクションを作成しよう
 
-Create a CLJS source file in the `src/cljs/modern_cljs` with the
-following content:
+`src/cljs/modern_cljs`の中に、下のような内容のClojureScriptを作ろう。
 
 ```clojure
 (ns modern-cljs.connect
@@ -93,20 +88,19 @@ following content:
 (repl/connect "http://localhost:9000/repl")
 ```
 
-Save the file as `connect.cljs`.
+このファイルを`connect.cljs`として保存しよう。
 
-As you can see, to connect from the browser to the brepl we have to call
-the `connect` function defined in the `clojure.browser.repl`
-namespace. We set `9000` as the port for the brepl to connect to,
-because this is the default port used by the brepl server when we'll
-start it.
+見ての通り、ブラウザからbreplに接続するため、
+`clojure.browser.repl`という名前空間の中で定義された`connect`という
+関数を呼び出してやる必要がある。breplに接続するためのポートとして`9000`を
+使おう。というのも、これがbreplサーバーが通常使うポートだからだ。
 
-### Compile the CLJS file
+### ClojureScriptをコンパイルしよう
 
-Now we need to compile the new CLJS file. [Google Closure Compiler][9]
-(CLS) has a few compilation options we already set up in our
-`project.clj` during [Tutorial 1][8], and we can leave those options
-as we have already configured. Now call the CLJS compilation task:
+で、この新しいClojureScriptのファイルをコンパイルする必要がある。[Google Closure Compiler][9]
+(CLS)は[Tutorial 1][8]で既に設定した`project.clj`ですでに設定したcompilation optionがある。
+そして、既に設定してあるものとして、このオプションをはずそう。さあ、ClojureScriptのcompilationを
+呼び出そう。
 
 ```bash
 lein cljsbuild once
@@ -114,12 +108,12 @@ Compiling ClojureScript.
 Compiling "resources/public/js/modern.js" from "src/cljs"...
 Successfully compiled "resources/public/js/modern.js" in 4.904672 seconds.
 ```
-### Start a brepl
 
-To enable the connection between the repl and the browser, we need
-to start a repl that acts as a server waiting for a connection from the
-browser. To do that we're going to use a `repl-listen` task already
-set up by `lein-cljsbuild` for us.
+### Breplを立ち上げよう
+
+ReplとBrowserの接続を出来るようにするために、ブラウザからの接続を待機する、replとして
+振る舞うサーバーを立ち上げる必要がある。このために使う`repl-listen`は、既に
+`lein-cljsbuild`が設定されている。
 
 ```bash
 lein trampoline cljsbuild repl-listen
@@ -127,46 +121,47 @@ Running ClojureScript REPL, listening on port 9000.
 "Type: " :cljs/quit " to quit"
 ClojureScript:cljs.user>
 ```
+まだbreplプロンプトでは、何もタイプが出来ない。ブラウザが接続することを
+待ってから、やっと反応を返すことができる。
 
-Do not yet type anything at the brepl prompt. It's waiting for a
-connection from the browser and it's not yet responsive.
+### コネクションを可能にしよう
 
-### Enable the connection
+立ち上がったbreplとブラウザを接続するために、
+前のチュートリアルで作った[simple.html][7]に訪れる必要がある。
+`file:///.../simple.html`のかわりに、`http://localhost:8888/simple.html`
+に行って確認してみよう。言い換えると、breplはまだ接続しない。
+[Tutorial 1][8].  
 
-To enable the browser connection with the running brepl we just need
-to visit the [simple.html][7] we created in the previous
-[Tutorial 1][8].  Make sure to visit it using
-`http://localhost:8888/simple.html` rather than through
-`file:///.../simple.html`, otherwise, the brepl will not connect.
+Obciously, http-serverは走っている。[simple.html][7]のページにいくことで、
+ClojusureScript Complitationで作られた`modern.js`スクリプトは、`lein-cljsbuild`
+プラグインの`repl-listen`によってスタートした`9000`ポートのbreplリスニングに
+コネクトしようとする。
 
-Obviously, the http-server has to be running. By visiting
-[simple.html][7] page, the included `modern.js` script generated by CLS
-compilation connects to the listening brepl on port `9000` started by
-`repl-listen` task of `lein-cljsbuild` plugin.
-
-Now you can evaluate CLJS forms in the brepl.
+今なら、ClojureScriptをbreplの中で評価することができる。
 
 ```clojure
 ClojureScript:cljs.user> (+ 41 1)
 42
 ClojureScript:cljs.user>
 ```
-Best of all, you can start evaluting CLJS forms interacting with the browser
-and see immediate feedback in the browser itself.
+
+上手くいっているのならば、ブラウザとともにCLojureSciriptを対話的に評価しはじめているだろう。
+そして、ブラウザ自身が即座にフィードバックを返してくれるはずだ。
 
 ```clojure
 ClojureScript:cljs.user> (js/alert "Hello from a browser connected repl")
 ```
 ![Alert Window][10]
 
-You will note that there is no command history or editing ability in
-this REPL.  You can add it if you wish by installing [rlwrap][12] and
-following the instructions [here][13]. Even better, you could take a
-look at the [Tutorial 18 - Housekeeping][19] which explains another
-brepl option which can be run from a standard CLJ REPl.
+このREPLは、コマンドの履歴であったり、あるいは編集能力があまりにもないことに
+そのうち気がつくと思う。望むなら、[rlwrap][12]をインストールしたり、[この][13]インストラクション
+を見たりすることで、これらの機能を追加することができる。いいことに、スタンダートなClojure REPLを
+走らせるかどうかを、他のbreplオプションから表明する方法を、[Tutorial 18 - Housekeeping]で見ることが
+出来る。
 
-If you created a new git branch as suggested in the preamble of this
-tutorial, I suggest you to commit the changes as follows
+
+もし、このチュートリアルのpreableにある提案にあった、新しいブランチを作っているのなら、
+さらにこれらの変更をコミットしておくことを薦めする。
 
 ```bash
 git commit -am "brepl enabled"
