@@ -217,7 +217,7 @@ Successfully compiled "resources/public/js/modern.js" in 6.894774 seconds.
 
 ![Hello ClojureScript][5]
 
-## Next Step - [Tutorial 2: Browser CLJS REPL (bREPL)][6]
+## 次のステップ - [Tutorial 2: ブラウザでClojureScript!! (bREPL)][6]
 
 In the next [tutorial][6] we're introduce the so called *brepl*, a browser
 connected CLJS REPL.
@@ -232,4 +232,4 @@ License, the same as Clojure.
 [3]: https://github.com/emezeske/lein-cljsbuild.git
 [4]: http://docs.oracle.com/javase/specs/jls/se7/html/jls-6.html
 [5]: https://raw.github.com/magomimmo/modern-cljs/master/doc/images/hellocljs.png
-[6]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-02.md
+[6]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-02.md
