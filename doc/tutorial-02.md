@@ -129,9 +129,8 @@ ClojureScript:cljs.user>
 前のチュートリアルで作った[simple.html][7]に訪れる必要がある。
 `file:///.../simple.html`のかわりに、`http://localhost:8888/simple.html`
 に行って確認してみよう。言い換えると、breplはまだ接続しない。
-[Tutorial 1][8].  
 
-Obciously, http-serverは走っている。[simple.html][7]のページにいくことで、
+明らかに、http-serverは走っている。[simple.html][7]のページにいくことで、
 ClojusureScript Complitationで作られた`modern.js`スクリプトは、`lein-cljsbuild`
 プラグインの`repl-listen`によってスタートした`9000`ポートのbreplリスニングに
 コネクトしようとする。
