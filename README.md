@@ -16,8 +16,6 @@
 ## [Tutorial 3 - Clojureベースなhttp-server][7]
 
 このチュートリアルでは、Clojureベースであるhttp-serverであるところの[ring][8]を用いて、外部http-serverを立てる。
-In this tutorial you are going to substitute the external http-server
-with [ring][8], a CLJ based http-server.
 
 ## 以下、もとのブランチから
 
