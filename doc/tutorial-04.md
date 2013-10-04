@@ -1,45 +1,52 @@
-# Tutorial 4 - Modern ClojureScript
+# Tutorial 4 - モダンなClojureScript
 
-In this tutorial we're going to start by porting a few JavaScript (JS)
-samples from the book [Modern JavaScript: Development and Design][1] by
-[Larry Ullman][2]. You can download the code from the book [here][3].
+このチュートリアルでは、[Larry Ullman][2]によって書かれた、
+[Modern JavaScript: Development and Desiin][1]という本から、
+いくかのJavaScriptのサンプルを書き直すことをやってみようと思う。
 
-The reason I choose it as a reference is because it starts smoothly, but
-keeps a robust approach to JS coding. I think that bringing Larry's
-approach from JS into ClojureScript (CLJS) could be helpful to anyone
-not yet fluent in CLJS.
+本のコードは、[ここ][3]からダウンロードすることができる。
 
-## Introduction
+参照元として、この本を選んだ理由としては、スタートであり、
+JavaScriptのコーディングのためにrobust approachしているからだ。
 
-As everybody knows, in the 1990s JS was primarily used for
-improving and validating HTML forms. Then, in the second half of the
-2000s, JS started to be used to make asynchronous requests to a server
-side resource and within a few months, we had two new buzzwords, Ajax
-and Web 2.0.
+思うに、LarryのアプローチをJavaScriptからClojureScriptに書き換えることは、
+ClojureScriptをもはやfluentしないことの手助けになると思う。
 
-As I said, I'm going to follow the already cited [Modern JavaScript][1]
-book to try to translate [Larry Ullman's][2] approach into a kind of
-Modern ClojureScript.
+## 始めに
 
-So let's start by migrating his first example to CLJS, a login form,
-because it's very instructive both in explaining the evolution of the use
-of JS in the latest decade, and in starting CLJS programming without
-knowing much about Clojure and/or ClojureScript themselves.
+ご存じのとおり、1990年代、JavaScriptはHTMLのフォームをバリデートしたり、
+あるいはフォーム自体の改善のために使われていた。
 
-> NOTE 1: I'm of the opinion that CLJS should be easier to set up not
-> only to use, as server-side devs, but for smart client-side devs as
-> well.  Application logic is moving fast from server-side to
-> client-side and all of us, as server-side devs, never had much love
-> for that LISP dressed in C running in the browser and named JS. We now
-> have the opportunity to see the best LISP ever *running in the
-> browser* and we should try to bring client-side programmers with
-> us. Otherwise, we risk seeing said LISP in C's clothing *running on
-> the server-side* too.
+そして、2000年代の始まりごろ、JavaScriptはサーバーサイドに対して、
+非同期的なリクエストを送るために使われ始めた。数ヶ月の間で、二つのバズワードを
+見るようになる。AjaxとWeb 2.0だ。
+
+言ったように、[Modern JavaScript][1]の書籍にあるな、
+[Larry Ullman's][2]のアプローチを、モダンなClojureScriptの類に変換する
+ことに挑戦しようと思う。
+
+じゃあ、彼の最初のサンプルであるログインフォームを、ClojureScriptに書き換えてみよう。
+というのも、ここ10年のJavaSciprtの使われ方の変容をよく表現しているし、ClojureScriptや
+Clojureの両方、あるいは片方について良くしらなくても、ClojureScriptについて学べるからだ。
+
+> NOTE 1: 私見になるが、ClojureScriptは、サーバーサイトの開発を作るのを簡単にする
+> だけではなく、クライアントサイトの開発もスマートにすることができると思う。
+> アプリケーション・ロジックは、サーバーサイトからクライアントサイドに素早く
+> 移動するわけで、サーバーサイド開発のように、ブラウザの中で走るCを着飾ったLisp、
+> その名もJavaScriptをそれほど愛せなくなるだろう。(訳者中: ここは自信無し)
+>
+> もう *ブラウザの中で動く* ベストなLISPを見つけることに希望を見出すことができるし、
+> クライアントサイド・プログラマーと共にそれらを届けることに挑戦するべきだ。言い換えると、
+> 私たちには、 *サーバーサイドで動いている* Cを着飾ったLispと呼ばれるものを
+> 見るリスクがあるというわけだ。
+>
+> NOTE 1 訳者(esehara)註: 上記部分は、元著者の力が入っているせいか、少々言っていることを
+> 掴むのが正直難しかったです……
 
 ## Preamble
 
-If you want to start working from the end of the [previous tutorial][16],
-assuming you've [git][20] installed, do as follows.
+もし、[前回のチュートリアル][16]を終わらせて、このチュートリアルを始めるのなら、
+[git][20]をインストールして、下のことをやるといい。
 
 ```bash
 git clone https://github.com/magomimmo/modern-cljs.git
@@ -48,19 +55,18 @@ git checkout tutorial-03
 git checkout -b tutorial-04-step-1
 ```
 
-## Registration form
+## 登録フォーム
 
-If you downloaded the [Modern JS][3] code samples, you'll find `login.html`,
-`css/styles.css` and `js/login.js` files in the `ch02` directory.
+[Modern JS][3]のサンプルコードをダウンロードしたなら、`ch02`のディレクトリの中に`js/login.js`、
+`css/styles.css`、`login.html`を見つけるはずだ。
 
 ![Modern ch02 tree][5]
 
-If you open `login.html` with your browser you should see something like
-this:
+`login.html`をブラウザで開いたなら、次のような画面が見えているはずだ。
 
 ![Login Form][6]
 
-Now, let's take a look at the HTML.
+ちょっとHTMLを見てみよう。
 
 ```html
 <!doctype html>
@@ -106,61 +112,64 @@ Now, let's take a look at the HTML.
 ```
 ### Progressive enhancement and unobtrusive JS
 
-Note that each element has both a `name` attribute and an `id`
-attribute. The `name` value will be used when the form data is submitted
-to the server-side. The `id` value will be used by the JS.
+`name`属性と、`id`属性の両方が、それぞれの要素にあることに注意しよう。
+`name`の値は、サーバーサイド対してデータが送信されたときに使われる。
+`id`の属性は、JavaScriptが使うためにある。
 
-`login.php` script is associated with the `form action`. And `login.js` is
-linked within the html page. Aside from `login.js` being linked within
-`login.html`, there is no direct connection between the `form` and the
-JS script. This choice has to do with the so called *progressive
-enhancement* and *unobtrusive JS* that Larry Ullman clearly explains in
-his book.
+`login.php`というスクリプトは、`フォームアクション`と協調する。そして、
+`login.js`はHTMLページの中にリンクがはられている。一方、`login.html`の中にある
+`login.js`のほうは、JavaScriptと`フォーム`の間を直接接続したりはしない。
+`login.php` script is associated with the `form action`. 
+これらの選択を、Larry Ullmanの本では明確に *プログレッシブ・エンハンスメント*(直訳すると、革新的に改善する)、そして*目立たないJavaScript*と呼んでいる。
 
-The following [sequence diagrams][4] show this approach in action.
+このアクションの中におけるアプローチを、下の[シークエンス・ダイアグラム][4]で見てみよう。
 
-#### Server-side only validation
+#### サーバーサイドだけでバリテーション
 
 ![Login Form Seq DIA 1][8]
 
-The form submitted by the user will be validated by the server-side `php
-script` named `login.php`. If the validation check passes, the server
-will log in the user, `else` the server will return the errors to
-the user for correction.
+ユーザーがフォームデータを送信すると、`login.php`と呼ばれる
+サーバーサイドの`PHP`がバリテーションする。もしバリテーションが通った
+なら、ユーザーはログインできる。`でなければ`、サーバーはユーザーに
+正しい入力をするように、エラーを返すだろう。
 
-Thanks to JS and Ajax, this user experience can be improved a lot. A
-better solution is to perform a client-side validation using JS, which
-bring us to the second sequence diagram.
+JavaScriptとAjaxのおかげで、このユーザー・エクスペリエンス(ユーザー体験)は
+大きな改善をすることができる。よりよい解決は、JavaScriptを使うことで、
+クライアントサイドの振る舞いを、次のシークエンス・ダイアログのように
+変更することだ。
 
-#### Client-side validation
+#### クライアントサイドでバリテーション
 
 ![Login Form Seq DIA 2][9]
 
-If the client-side (i.e. JS) validation passes, we still have to ask the
-server-side validation for security reasons. But if the client-side
-validation does not pass, we do not need to make a round-trip to the
-server and we can immediately return the errors to the user.
+(例えば、JavaScriptを使うとかで)クライアントサイトのバリテーションを
+通過したとしても、セキュリティのために、サーバーサイドのバリテーションも
+聞く必要がある。
 
-But we still have some problems. The client-side validation cannot
-check if the username is registered. This bring us to Ajax and
-the third sequence diagram.
+しかし、クライアントサイドのバリテーションを通過しないときは、サーバーに
+飛ぶ必要はないわけで、即座にユーザーにエラーを返せばいい。
 
-#### Ajax in action
+だが問題がないわけではない。クライアントサイドのバリテーションは、
+ユーザーネームが登録されているかどうかをチェックすることができない。
+この方法を、三番目のシークエンス・ダイアグラムで確認しよう。
+
+#### アクションの中にあるAjax
 
 ![login Form Seq DIA 3][10]
 
-The user experience has now been much more enhanced. The Ajax call
-communicates with the server (e.g., to verify if the email address does
-exist) resulting in a more efficient and responsive process.
+ユーザー・エクスペリエンスはかなり改善されている。
+Ajaxは、もっと効率よく、かつ反応がよいプロセスで、
+サーバーが解決するコミュニケーションをしようとする。
+(例えば、Emailアドレスが既に存在しているかどうか、とか)
 
-In this tutorial, we are going to limit ourselves to the client-side
-validation scenario without implementing the server-side validation
-or the Ajax call to the server. We will implement those in
-subsequent more advanced tutorials.
+このチュートリアルでは、サーバーサイドのバリテーションであったり、
+あるいはAjaxがサーバーを呼び出すということをせず、クライアントサイドの
+バリテーションに限定しようと思う。
+もっと先のチュートリアルで、これらの方法を使うことになる。
 
 ## JavaScript
 
-That said, let's take a look at `login.js` code:
+というわけで、さっそく`login.js`のコードを読んでみよう。
 
 ```JavaScript
 // Script 2.3 - login.js
@@ -203,17 +212,20 @@ window.onload = init;
 
 ## Porting to ClojureScript
 
-It has been not a short trip, but we can now start to port the login
-form validation from JS to CLJS. We're going to start off directly
-translating JS to CLJS using [CLJS interop][12] with the underlying
-JavaScript Virtual Machine (JSVM).
+決して短い道のりではないが、ログインフォームのバリテーションを
+JavaScriptからClojureScriptに書き直すことを始めよう。
+下層レイアーにあるJavaScript Virtual Machine(JSVM)で、
+[CLJS interop][12]を使って、JavaScriptからClojureScriptに直接
+書き直すことをやってみよう。
 
-The JS `validateForm()` function gets `email` and `password` ids from
-form input and verifies that both have a value. The `validateForm()`
-function returns `true` if the validation passes, `false` otherwise.
+JavaScriptの`validateForm()`は、フォームの入力から、
+`email`と`password`を受けとり、そして両方の値を調べている。
+この`validateForm()`関数は、もしバリデーションが通ったなら
+`true`を返し、なんらかのエラーがあるなら`false`を返す。
 
-Now let's write some CLJS code. Create the file `login.cljs` in the
-`src/cljs/modern_cljs` directory and write the following code:
+というわけで、何らかのClojureScriptのコードを書いてみよう。
+`login.cljs`というファイルを、`src/cljs/modern_cljs`のディレクトリの
+下に作ろう。そして、次のように書いてみよう。
 
 ```clojure
 (ns modern-cljs.login)
@@ -245,33 +257,28 @@ Now let's write some CLJS code. Create the file `login.cljs` in the
 (set! (.-onload js/window) init)
 ```
 
-As you can see, this ported code defines two functions: `validate-form`
-and `init`.
+見ての通り、書き直されたコードには二つの関数が定義されている。
+`validate-form`と`init`だ。
 
-> NOTE 2: note that in CLJ/CLJS the use of CamelCase to name things is not
-> idiomatic. That's why we translated `validateForm` to `validate-form`.
+> NOTE 2: ClojureやClojureScriptの中で、キャメルケースは
+> 慣用的な使われ方ではないことに注意しよう。だから、
+> `validateForm`は`vaidate-form`に書き直されている。
 
-The `let` form allows you to define a kind of local variables, like
-`var` in the above JS code. As noted, we extensively used the "."
-and ".-" JS interop to call JS native functions
-(e.g. `.getElementById`) and to get/set JS object properties
-(i.e. `.-value`) or functions we want as value (e.g. `.-getElementById`
-and `.-onsubmit`), rather than execute. This is one of the
-[differences between CLJS and CLJ][12] that depends on the underlying
-host virtual machine (i.e. JSVM versus JVM).
+`let`はJavaScriptの`var`のように、ローカル変数を定義することができる。
 
-Copy the `login.html` file from [ch02 of Modern JS Code][3] to
-`resources/public` directory.
+同様に、JavaScriptのネイティヴな関数を呼び出すためだったり、JavaScriptのオブジェクトのプロパティにセット、あるいはゲットをするために、"."とか
+".-"が使える。また評価される前の関数を値のように扱える。(例えば、関数を呼び出すなら`.getElementById`、プロパティにセットするなら`.-value`、そして関数を値として扱いたいなら、`.-getElementById`だ。)
+これは、[ClojureScriptとClojureの違い][12]の一つである。それは、下層レイヤーであるところの仮想マシンに依存しているわけだ。(JavaScript VMとJVMの違いみたいなもんだね)
 
-> NOTE 3: If you're using an HTML5 browser, instruct the form to
-> deactivate input validation by adding `novalidate` as the last
-> attribute of the form. Pay attention to the `novalidate` spelling,
-> otherwise the HTML5 browser will be free to intercept the fields
-> attribute `required` and check for them before JS is involved and you
-> would not see the alert window be opened by CLJS.
+[ch02のModern JavaScript Code][3]から、`login.html`ファイルをもってきて、`resources/public`ディレクトリに置こう。
 
-Finally, set the `src` script tag attribute value to
-`js/modern.js`. Here is the final `login.html`
+> NOTE 3:
+> HTML5対応ブラウザを使っているなら、フォームの最後の属性として`novalidate`を追加することで、
+> フォームのバリテーションをアクティブにしないようにすることができる。`novalidate`のスペルに気をつけて。
+> 他方で、HTML5対応ブラウザは、`required`属性のフィールドを自由にさえぎることもできるし、そしてJavaScript
+> が評価する前にこれらをチェックすることで、ClojureScriptによるアラートウィンドウを見ることができなくなる。
+
+最後に、scriptタグの`src`属性の値に`js/modern.js`をセットしよう。これで`login.html`は最後だ。
 
 ```html
 <!doctype html>
@@ -312,12 +319,12 @@ Finally, set the `src` script tag attribute value to
 </html>
 ```
 
-We're almost done.  Copy `style.css` file from
-[ch02/css][3] of Modern JS Code  to `resources/public/css` directory.
+これでほとんど終わりである。`style.css`をModern JavaScriptのコードである[ch02/css][3]から
+`resources/public/css`ディレクトリにコピーしよう。
 
-## CLJS Compilation
+## ClojureScriptをコンパイル
 
-Now we can compile our `login.cljs` as usual (cfr. [Tutorial 1][11])
+普段通り、`login.cljs`をコンパイルしよう。(cfr. [Tutorial 1][11])
 
 ```bash
 lein cljsbuild once
@@ -328,65 +335,54 @@ Compiling ClojureScript.
 Compiling "resources/public/js/modern.js" from "src/cljs"...
 Successfully compiled "resources/public/js/modern.js" in 5.075248 seconds.
 ```
-If you want to trigger automatic JS recompilation whenever you change
-CLJS source code, just replace the command `once` with `auto` like so:
+
+ClojureScriptのソースコードが変更されたら、自動的にJavaSriptにコンパイルしなおす
+ように設定したければ、`once`というコマンドを`auto`に書き換えればよい。
 
 ```bash
 lein cljsbuild auto
 ```
+## 実行
 
-## Run
-
-Open `login.html` in your browser to verify that everything went
-well.
+全てが上手くいっているかどうか、`login.html`をブラウザで開いて確認しよう。
 
 ![Login Form][13]
 
-Note that the browser shows both the login form and the "Hello,
-ClojureScript!" text from the [first tutorial][11]. The reason for that
-will be explained in a subsequent tutorial on [Google Closure
-Compiler][17].
+[最初のチュートリアル][11]から"Hello, ClojureScript"が、ログインフォームと共に
+ブラウザ上に見えているはずだ。その理由は、先で説明する[Google Clojure Compiler][17]に
+よるものだ。
 
-Now let's play with the form:
+さっそくフォームで遊んでみよう。
 
-* if you click the login button before having filled both email and
-password fields you should see the alert window popping up and asking
-you to complete the form;
-* if you click the login button after having filled both email and
-  password fields you should see the usual browser error message
-  saying that the page
-  `/path/to/modern-cljs/resources/public/login.php` could not be
-  found. That's because the action attribute of the html form
-  still references `login.php` as the server-side validation
-  script. The server-side validation will be implemented in CLJ in a
-  subsequent tutorial.
+* EmailとPasswordのフィールドを入力する前に、ログインボタンをおしたら、
+  アラートウィンドウが出て、フォームの入力が終わったかどうか聞いてくるはずだ。
+* もし、EmailとPasswordの両方のフィールドを入力したあとに、ログインボタンを押した
+  なら、`/path/to/modern-cljs/resources/public/login.php`が見つからない、という
+  普段のブラウザで良く見かけるエラーメッセージが表示されるはずだ。これは、HTMLのページの
+  アクション属性が、サーバーサイドのバリテーションスクリプトとして、`login.php`を参照している
+  からだ。Clojureによる、サーバーサイドのバリテーションについては、先のチュートリアルで行う。
 
 ![Please, complete the form][14]
 
 ![File not found][15]
 
-## The fun part
+## 楽しいパート
 
-In this last paragraph of the tutorial you can start to have some fun
-with the brepl and the CLJ http-server we introduced in [tutorial 3][16]
+このチュートリアルの最後の節で、[tutorial 3][10]で紹介したClojure http-severと
+breplを利用して遊んでみよう。
 
-0. launch the compile task in auto mode: `lein cljsbuild auto`
-1. launch the brepl: `lein trampoline cljsbuild repl-listen`
-2. launch the ring server: `lein ring server`
-3. visit the login page: `http://localhost:3000/login.html`
-4. evaluate `(in-ns 'modern-cljs.login)` in the brepl
-5. evaluate `validate-form` in the brepl. You should see the JS function
-generated by CLJS compiler with the support of Google Closure Compiler;
-6. evaluate `(validate-form)`. You should see the Alert Window asking
-you to complete the form.
-7. go on interacting with the browser via the brepl.
+0. オートモードでコンパイルを立ち上げよう。 `lein cljsbuild auto`
+1. breplを立ち上げよう。 `lein trampoline cljsbuild repl-listen`
+2. ring serverを立ち上げよう。 `lein ring server`
+3. ページを見てみよう。 `http://localhost:3000/login.html`
+4. breplで `(in-ns 'modern-cljs.login)`を入力してみよう。
+5. でもって`validate-form`を入力してみよう。Google Clojure Comilerによってサポートされた、ClojureScriptコンパイラがJavaScript関数を生成しているのが見えるだろう。
+6. `(validate-form)`を評価してみよう。すると、アラートウィンドウがフォームの入力を完了したかどうか訪ねてくるのが見えるだろう。
+7. breplからブラウザと対話できたのだ！
 
-If you fill both the email and password and click the login button,
-you'll see the `Not found page` we set up with compojure in
-[Tutorial 3][16]
+もし、emailとpasswordを満たしてログインボタンをおしたとき、[TUtorial 3][16]のCompojureをセットアップしたときの`Not found page`が見えるだろう。
 
-If you created a new git branch as suggested in the preamble of this
-tutorial, I suggest you to commit the changes as follows
+このチュートリアルのpreambleのように、gitの新しいブランチを作っているのなら、下のようにコミットしておくことをお薦めする。
 
 ```bash
 git commit -am "modern javascript"
