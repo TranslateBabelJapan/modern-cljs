@@ -165,7 +165,7 @@ ClojureScript:cljs.user> (js/alert "Hello from a browser connected repl")
 git commit -am "brepl enabled"
 ```
 
-## Next step - [Tutorial 3: CLJ based http-server][11]
+## 次のステップ - [Tutorial 3: Clojureベースなhttp-server][11]
 
 In the next [tutorial][11] we're going to substitute the external
 http-server with a CLJ based http-server in such a way that in others
@@ -187,7 +187,7 @@ License, the same as Clojure.
 [8]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-01.md
 [9]: https://developers.google.com/closure/compiler/
 [10]: https://raw.github.com/magomimmo/modern-cljs/master/doc/images/alert.png
-[11]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-03.md
+[11]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-03.md
 [12]: http://utopia.knoware.nl/~hlub/rlwrap/#rlwrap
 [13]: https://github.com/emezeske/lein-cljsbuild/wiki/Using-Readline-with-REPLs-for-Better-Editing
 [14]: https://github.com/emezeske/lein-cljsbuild/issues/186

@@ -13,6 +13,12 @@
 このチュートリアルでは、ClojureScriptのREPLを、外部http-serverを立ち上げることで
 ブラウザと接続する方法を学ぶ。
 
+## [Tutorial 3 - Clojureベースなhttp-server][7]
+
+このチュートリアルでは、Clojureベースであるhttp-serverであるところの[ring][8]を用いて、外部http-serverを立てる。
+In this tutorial you are going to substitute the external http-server
+with [ring][8], a CLJ based http-server.
+
 ## 以下、もとのブランチから
 
 A series of tutorials to guide you in creating and setting up
@@ -105,10 +111,6 @@ run the latest available tutorial without coding:
 > * `git checkout tutorial-01 # for tutorial 1, tutorial-02 for tutorial 2 etc `
 
 
-## [Tutorial 3 - CLJ based http-server][7]
-
-In this tutorial you are going to substitute the external http-server
-with [ring][8], a CLJ based http-server.
 
 ## [Tutorial 4 - Modern ClojureScript][9]
 
@@ -219,7 +221,7 @@ License, the same as Clojure.
 [4]: http://localhost:3000/shopping-dbg.html
 [5]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-01.md
 [6]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-02.md
-[7]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-03.md
+[7]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-03.md
 [8]: https://github.com/mmcgrana/ring.git
 [9]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-04.md
 [10]: http://www.larryullman.com/books/modern-javascript-develop-and-design/
