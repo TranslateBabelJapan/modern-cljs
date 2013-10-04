@@ -1,23 +1,24 @@
-# Tutorial 3 - CLJ based http-server
+# Tutorial 3 - Clojureベースなhttp-server
 
-In this tutorial you are going to substitute the external http-server
-that we configured in [tutorial 2][1] with [ring][2] and
-[compojure][5], the most standard way run a web based CLJ application.
+このチュートリアルは、[tutorial 2][1]で行った設定を、
+ClojureのスタンダートなWebベースのアプリケーションを作るための
+方法である[ring][2]と[compojure][3]を利用した外部http-serverに
+取り替える方法を学ぶ。
 
 ## Introduction
 
-So far we have only played with CLJS code that, once compiled to JS, runs on the
-browser side, and have not needed a CLJ-enabled http-server. But we love Clojure
-and we want to learn more about it too.
+いままでClojureScriptコードは、JavaScriptに一回コンパイルし、それをブラウザ上で走らせる
+ためであって、Clojureがやることのできるhttp-serverまでは必要としていなかった。とはいえ、
+Clojureが好きなわけだら、Clojureでのhttp-serverの立て方をもっと知りたいと思うはずだ。
 
-[Ring][2] is one of the fundamental building-blocks of any CLJ-based
-stack of libraries to develop web based applications. We're going to use it
-instead of any other http-server.
+[Ring][2] は、Webベースのアプリケーションを開発するための、Clojureベースのライブラリで
+あり、fundamentalなbuilding-blockの一つである。他のあらゆるhttp-serverを使うかわりに、
+これを使おうと思う。
 
 ## Preamble
 
-If you want to start working from the end of the [previous tutorial][1],
-assuming you've [git][8] installed, do as follows.
+[前回のチュートリアル][1]を終わらせて、今回のチュートリアルをやろうとしているならば、
+[git][8]をインストールして、下のように入力することをお薦めする。
 
 ```bash
 git clone https://github.com/magomimmo/modern-cljs.git
@@ -26,25 +27,23 @@ git checkout tutorial-02
 git checkout -b tutorial-03-step-1
 ```
 
-## Add lein-ring plugin to our project.clj
+## lein-ringプラグインをproject.cljに追加しよう
 
-We already saw how `lein-cljsbuild` plugin helped us in managing the
-build, the configuration and the running of CLJS code. In a similar way,
-we're going to use [lein-ring][3] plugin to manage and automate common
-[ring][2] tasks.
+ClojureScriptを設定して走らせるために、ビルドのなかで如何に`lein-cljsbuild`
+が手助けをしてくれるかを見てきた。似たような方法として、[ring][2]の仕事を
+自動的かつ管理してくれる[lein-ring][3]というプラグインを使おうと思う。
 
-To install `lein-ring`, add it as a plugin to your `project.clj`. As for
-`lein-cljsbuild`, if you're going to use it in every CLJ project, you
-can add it to your global profile (i.e. in `~/.lein/profiles.clj`).
+`lein-ring`をインストールするために、`project.clj`にプラグインとして
+`lein-ring`を追加しよう。`lein-cljsbuild`は、もし全てのプロジェクトで
+使うことをお望みなら、グローバルなprofileにこいつを追加することもできる。
+(例えば、`~/.lein/profiles.clj`の中に書くとかね)
 
-Like `lein-cljsbuild`, `lein-ring` plugin requires to be configurated
-by adding a `:ring` keyword to `project.clj`. The value of `:ring` has
-to contain a map of configuration options, but at the moment just one
-of them, the `:handler`, is required and has to refer a function we are
-going to define.
+`lein-cljsbuild`のように、`lein-ring`というプラグインは、`:ring`キーワードを
+`project.clj`の中に追加する設定を必要としてくるだろう。`:ring`の値は、
+設定のオプションへのマップを含んでいるのだが、ここではただ`:handler`という、
+これから定義するであろう関数へのリファラーが必要となる。
 
-Here is the modified version of `project.clj` with the required
-configuration we talked about.
+先ほど話した、必要とされる設定と共に`project.clj`を書き換えよう。
 
 ```clojure
 (defproject modern-cljs "0.1.0-SNAPSHOT"
@@ -83,25 +82,22 @@ configuration we talked about.
                            :pretty-print true}}]})
 ```
 
-## Create the handler
+## handlerを作ろう
 
-A ring handler is just a function that receives a request as an
-argument and produces a response. Both request and response are
-regular clojure maps. Instead of using low-level [Ring API][4], we're
-going to add another very common library to our `project.clj`:
-[compojure][5].
+ringのhandlerは、リクエストを引数として受けり、そしてレスポンスを返す
+だけの関数だ。リクエストもレスポンスも、通常のClojureのマップだ。低レベル
+レイヤーの[Ring API][4]を使う代わりに、他の共通ライブラリを`project.clj`に
 
-[Compojure][5] is a small routing library for [Ring][2] that allows
-web applications to be composed of small and independent parts, using
-a concise DSL (Domain Specific Language) to generate a [Ring][2]
-handler.
+Webアプリケーションを小さく、そして独立したパートにcomposedし、[Ring][2]
+のhandlerを生成するためのDSL(ドメイン特化言語)を[Ring][2]の
+Webアプリケーションで出来るようにするための、小さなルーティングライブラリだ。
 
-In this tutorial our goal is to set up an http-server able to serve
-static html pages (e.g. simple.html) saved in the `resources/public`
-directory.
+このチュートリアルでのゴールは、`resources/public`の中にセーブされた
+静的なHtmlページ(simple.htmlだね！)を配信することができるように、http-serverを
+立ち上げることだ。
 
-Open the file `core.clj` from `src/clj/modern_cljs` directory and
-change its content as follows.
+`src/clj/modern_cljs`から`core.clj`というファイルを開いて、下の内容に書き換えて
+みよう。
 
 ```clojure
 (ns modern-cljs.core
@@ -128,9 +124,9 @@ change its content as follows.
 
 ## Add compojure to project.clj
 
-Before running our new CLJ based http-server, we need to add `compojure`
-to the `project.clj` dependencies section. The new `project.clj` is as
-follows:
+Clojureベースのhttp-serverを立ち上げる前に、`project.clj`の
+依存関係を記述しているセクションに`compojure`を追加しておく必要がある。
+書き換えた`project.clj`は下のようになる。
 
 ```clojure
 (defproject modern-cljs "0.1.0-SNAPSHOT"
@@ -168,9 +164,8 @@ follows:
                            :pretty-print true}}]})
 ```
 
-## Run the http-server
-
-Now that everything has been set up, we can run the server as follows:
+## http-serverを立ち上げろ！
+全てを設定したら、下のようにサーバーを立ち上げることが出来るようになる。
 
 ```bash
 lein ring server
@@ -179,18 +174,18 @@ Started server on port 3000
 2012-11-03 19:06:33.222:INFO:oejs.AbstractConnector:Started SelectChannelConnector@0.0.0.0:3000
 ```
 
-You should see a page with a paragraph saying
-"Hello from compojure".  As you can see, the server started by detault
-on port `3000`. Optionally, you can pass it a different port number,
-like so: `lein ring server 8888`.
+"Hello form compojure"という文が表示されているページが見えているはずだ。
+これを見ることができるのは、サーバーがデフォルトで動くポートである`3000`で
+ある。オプションとして、`lein ring server 8888`のように、違うポート番号を
+指定することができる。
 
-You can also check that the browser-connected repl is still working by
-launching the `lein trampoline cljsbuild repl-listen` command on a
-new terminal (remember to cd to `/path/to/modern-cljs`) and visiting
-[simple.html][6] page.
+ブラウザコネクトベースであるReplを、`lein trampoline cljsbuild repl-listen`で
+立ち上げることによって動いていることもチェックができる。これは新しいターミナル
+(`/path/to/modern-cljs`に移動することを思い出そう)でコマンドを叩こう。そして、
+[simple.html][6]ページに行こう。
 
-If you created a new git branch as suggested in the preamble of this
-tutorial, I suggest you to commit the changes as follows
+このチュートリアルのpreambleで提案した、新しいブランチを作成しているなら、
+下のように変更を加えることをお薦めする。
 
 ```bash
 git commit -am "added ring and compojure"
