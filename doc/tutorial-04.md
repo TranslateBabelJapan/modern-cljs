@@ -6,11 +6,11 @@
 
 本のコードは、[ここ][3]からダウンロードすることができる。
 
-参照元として、この本を選んだ理由としては、スタートであり、
-JavaScriptのコーディングのためにrobust approachしているからだ。
+参照元として、この本を選んだ理由としては、
+JavaScriptのコーディングのためにいいアプローチを維持しているからだ。
 
 思うに、LarryのアプローチをJavaScriptからClojureScriptに書き換えることは、
-ClojureScriptをもはやfluentしないことの手助けになると思う。
+ClojureScriptをすらすら書くことの手助けになると思う。
 
 ## 始めに
 

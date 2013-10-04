@@ -17,6 +17,12 @@
 
 このチュートリアルでは、Clojureベースであるhttp-serverであるところの[ring][8]を用いて、外部http-serverを立てる。
 
+## [Tutorial 4 - モダンなClojureScript][9]
+
+このチュートリアルでは、[Larry Ullman][11]が書いた[Modern JavaScript: Development and design][10]
+ログインフォームを、JavaScriptからClojureScriptに書き換えるということで、
+ClojureScriptによるフォームバリテーションを楽しんでみよう。
+
 ## 以下、もとのブランチから
 
 A series of tutorials to guide you in creating and setting up
@@ -110,11 +116,6 @@ run the latest available tutorial without coding:
 
 
 
-## [Tutorial 4 - Modern ClojureScript][9]
-
-In this tutorial we start having some fun with CLJS form validation, by
-porting from JS to CLJS the login form example of
-[Modern Javascript: Development and design][10] by [Larry Ullman][11].
 
 ## [Tutorial 5 - Introducing Domina][12]
 
@@ -221,7 +222,7 @@ License, the same as Clojure.
 [6]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-02.md
 [7]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-03.md
 [8]: https://github.com/mmcgrana/ring.git
-[9]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-04.md
+[9]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-04.md
 [10]: http://www.larryullman.com/books/modern-javascript-develop-and-design/
 [11]: http://www.larryullman.com/
 [12]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-05.md

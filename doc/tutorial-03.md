@@ -192,7 +192,7 @@ Started server on port 3000
 git commit -am "added ring and compojure"
 ```
 
-## Next step - [Tutorial 4: Modern ClojureScript][7]
+## 次のステップ - [Tutorial 4: モダンなClojureScript][7]
 
 In the [next tutorial 4][7] we're going to have some fun introducing form validation in CLJS.
 
@@ -207,5 +207,5 @@ License, the same as Clojure.
 [4]: http://ring-clojure.github.com/ring/
 [5]: https://github.com/weavejester/compojure.git
 [6]: http://localhost:3000/simple.html
-[7]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-04.md
+[7]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-03.md
 [8]: https://help.github.com/articles/set-up-git
