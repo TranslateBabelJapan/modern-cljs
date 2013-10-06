@@ -1,5 +1,7 @@
-# Tutorial 5 - Introducing Domina
+# Tutorial 5 - Domina入門
 
+このチュートリアルでは、前回のチュートリアルで見せた、ログインフォームの
+バリテーションを改善するために、[Domina][1]を紹介する。
 In this tutorial we're going to introduce [Domina][1] to improve the
 idiomaticity of the login form validation we presented in
 the [previous tutorial][2].
@@ -16,36 +18,39 @@ git checkout tutorial-04
 git checkout -b tutorial-05-step-1
 ```
 
-## Introduction
+## 始めに
 
-In the [previous tutorial][2] we started coding in CLJS, directly
-translating from JS to CLJS by using the [JS interop][7] features of CLJS. Now
-it's time to try something better.
+前回から、[Js interop][7]を使うことで、JavaScriptからClojureScriptに直接
+書き換えることで、ClojureScriptのコーディング始めた。今回はもうちょっとマシな
+方法を試してみようと思う。
 
+> [Domina][1]は、ClojureScriptのための、jQueryに影響を受けたDom処理ライブラリです。
+> これは、Googlo CLosure Libraryが提供しているDom処理のインターフェイスを、
+> CLojureの関数型的な慣習へと合わせたものです。Domina自体はどんなイノベーションを
+> しているわけではないけれども、ClojureScriptの中で自然に感じるような、Dom処理を、
+> 基本的な関数の中で使うことができるでしょう。
 > [Domina][1] is a jQuery inspired DOM manipulation library for
-> ClojureScript. It provides a functional, idiomatic Clojure interface
-> to the DOM manipulation facilities provided by the Google Closure
-> library...  While Domina does not provide any innovations, it attempts to
-> provide a basic functional interface to DOM manipulation that feels
-> natural in ClojureScript.
+
+ClojureScriptの中を見ていたとき、最初に[clojurescriptone][3]を見つけて、
+そして[Design and templation][4]を読んで、下の文章に対してとても納得した
+ことがある。
 
 When I first met [clojurescriptone][3] in searching for a CLJS guide,
 and read about [Design and templating][4], I found myself very much in
 agreement with the following reasoning:
 
-> Many Clojure web applications use [Hiccup][5] for HTML templating. If
-> the programmer is also the designer, then Hiccup is ideal. However,
-> most developers are bad at design. We need to work with people who are
-> good at design and who don't need to care about Clojure. ClojureScript
-> One proposes one approach to templating which allows designers to work
-> with HTML, CSS and images without having to set an eye on Hiccup data
-> structures or those pesky parentheses.
+> 多くのClojureのウェブアプリケーションでは、HTMLテンプレートとして[Hiccup][5]
+> を使っている。プログラマーが同様にデザイナーであるならば、これは理想的である。
+> しかし、多くの開発者というのはデザインに関しては疎い。Clojureのことには特に
+> 注意を払わない良きデザインを行う人と働かなければいけない。Hiccupのデータ構造
+> などに注意を払わなくても、HTMLやCSSと共に働くデザイナーに対して、ClojureSciptの
+> テンプレートの方法を提供する。
 
-Our old `login.html` friend is going to be our pure HTML/CSS template
-and `domina` is going to be our CLJS library to interface the DOM of the
-page in more idiomatic CLJ/CLJS.
+昔の友である`login.html`を純粋なHTML/CSSテンプレートにしよう。そしてClojureScript
+及びClojure及びCLojureScriptの流儀にページのDomのインターフェイスを作ってくれるのが
+`domina`だ。
 
-Here is the content of `login.html` we already used in [tutorial 4][2].
+ここに、[tutorial 4][2]使った`login.html`の内容がある。
 
 ```html
 <!doctype html>
@@ -86,11 +91,11 @@ Here is the content of `login.html` we already used in [tutorial 4][2].
 </html>
 ```
 
-## Add domina to project dependencies
+## プロジェクトのdependeciesにdominaを追加しよう
 
-As usual when using leiningen, to add a library to a CLJ/CLJS project,
-you need to add it to the dependencies section of `project.clj`. Here is
-the updated version of `project.clj`
+Leiningenを普段使うとき、もしClojureやClojureScriptのライブラリを使うために、
+ライブラリを`project.clj`に書き足してやる必要がある。`project.cls`を書き直した
+バージョンは下の通りだ。
 
 ```clojure
 (defproject modern-cljs "0.1.0-SNAPSHOT"
@@ -130,49 +135,41 @@ the updated version of `project.clj`
                            :pretty-print true}}]})
 ```
 
-> NOTE 1: **ATTENTION**. Due to an incompatibility/bug of the deployed
-> "1.0.2-SNAPSHOT" release of [domina][1] with the any CLJS release
-> superior to the "0.0-1847" one, I rolled back the CLJS release to
-> "0.0-1847".
-> 
-> Even if the owner of the [domina][1] lib merged the fix I submitted,
-> he still has to deploy it into a public repository. This is something
-> that could frequently happen. In a subsequent tutorial, specifically
-> dedicated to this kind of problematics, I'll explain how to manage
-> this situation.
+> NOTE 1: **注目** [domina][1]のリリースしている"1.0.2-SNAPSHOT"の不完全さとバグ、
+> のため、私はClojureScriptのリリースを"0.0-18477"に戻している。
+>
+> 既に[domina][1]ライブラリの作者は、私が送った修正をマージしているのだが、
+> 未だに公開レポジトリでは、このように開発している。これはたまに起きることだ。
+> 次のチュートリアルに進む時も、この手の問題が現れたりするだろう。そのときは、
+> どのように管理するかを説明する。
 
-## Domina selectors
+## Dominaのセレクター
 
-[Domina][1] offers several selector functions: `xpath`, in the `domina.xpath`
-namespace, and `sel`, in the `domina.css` namespace. But it also features the
-`by-id`, `value` and `set-value!` functions defined in the `domina` core
-namespace, which is the one we're going to use.
+[Domina][1]は、いくつかのセレクタ関数をもっている。`domina.xpath`という名前空間の
+中には`xpath`が存在していて、`domina.css`という名前空間には`sel`が存在している。とはいえ、
+`domina`のコアには`by-id`、`value`、そして`set-value`という関数が定義されているので、
+これらを使おうと思う。
 
-The nice thing about domina `(by-id id)`, inherited from the underlying
-Google Closure library on which `domina` is implemented, is that it
-takes care of verifying if the passed argument is a string. As we
-anticipated, the `domina` core namespace offers other useful functions we're
-going to use: `(value el)`, which returns the value of the passed
-element, and `(set-value! el value)` which sets its value.
+`domina`が実行するGoogle Clojure Libraryからの、Dominaの`(by-id id)`はステキなことに
+文字列を渡されたとしても、上手いこと変換してくれる。そして予想でkりうように、`domina`の
+コアの名前空間には、とても使える関数がいくつも用意されている。`(value el)`は、要素の値を
+返してくれるものだし、`(set-value! el value)`は、要素の値をセットする。
 
-> Note 2: when a function modifies an argument passed to it, by Clojure
-> naming convention a bang "!" is added at the end of the function
-> name.
+> Note 2: 関数が渡された引数について変更を加える場合、Clojureでは関数の後に"!"という
+> 名前をつけるようになっている。
 
-> Note 3: when you need to :use or :require a namespace, CLJS imposes
-> using the :only form of :use and the :as form of :require. For further
-> differences see [the ClojureScript Wiki][8]
+> Note 3: :use や :require が名前空間で必要になったとき、ClojureScriptは、
+> :useでは :only が使えうし、また:requireで:asが使える。機能の違いについては、
+> [the ClojureScript Wiki][8]を見て欲しい。
 
-## Modify validate-form
+## バリテーションフォームを変化させよう
 
-In this step we're going to modify the namespace declaration and
-`validate-form` function definition substituting `.getElementById` and
-`.-value` JS interop with the corresponding domina `by-id` and `value`
-functions.
+このステップでは、名前空間での宣言を書き換えて、Js interopで使っていた
+`.getElementById`と`.-value`を、dominaで対応する関数である`by-id`と`value`の
+関数に書き換えてみよう。
 
-Open `login.cljs` file from `src/cljs/modern_cljs` directory of the
-project and modify both its `namespace` declaration and `validate-form`
-function definition as follows:
+プロジェクトのディレクトリである`src/cljs/modern_cljs`から`login.cljs`を開き、
+`namespace`の宣言部分と、`validate-form`関数の定義を、下のように書き換えてみよう。
 
 ```clojure
 (ns modern-cljs.login
@@ -190,9 +187,9 @@ function definition as follows:
           false))))
 ```
 
-As you can see, using `domina` the code is now more fluid than before.
-Leave the rest of the file as is. To check that everything still works
-do the following:
+見ての通り、`domina`を使ったコードは以前よりとてもスムーズだ。残りのファイル
+についてもこのように書き換よう。そして、全て上手くいっているかどうか、下の
+コマンドで確認しよう。
 
 ```bash
 cd /path/to/modern-cljs
@@ -201,11 +198,13 @@ lein cljsbuild once # in a new terminal and after having cd in modern-cljs
 lein trampoline cljsbuild repl-listen
 ```
 
+> Note 4: 貴方の開いているターミナルで、プロジェクトのホームディレクトリにいるかどうか
+> 確かめよう。
 > Note 4: be sure to `cd` to the home directory of the project in each
 > terminal you open.
 
-Open <http://localhost:3000/login.html>, and when the CLJS repl becomes responsive,
-having established a connection with the browser, try the following at the REPL prompt:
+<http://localhost:3000/login.html>を開いて、ブラウザとClojue ScriptのReplが接続されたら、
+REPLから下のようなコマンドを叩いてみよう。
 
 ```bash
 ClojureScript:cljs.user> (in-ns 'modern-cljs.login)
@@ -231,23 +230,21 @@ ClojureScript:modern-cljs.login> validate-form
 ClojureScript:modern-cljs.login>
 ```
 
-The evaluation of the `validate-form` symbol returns the JS function
-definition attached by the CLJS compiler to the symbol itself. If you
-now try to call the function `(validate-form)`, you should see the
-browser alert window asking you to complete the form; click the `ok`
-button and you'll see `(validate-form)` returning `false`.
+`validate-form`シンボルを評価すると、Clojure Scriptのコンパイラがそのシンボル自身に結びついた
+JavaScriptの関数を返す。`(validate-form)`で、この関数を呼び出てみると、きっとブラウザに
+全ての入力が完了したかどうか、訪ねるアラートウィンドウが、ブラウザ上で表示されるだろう。
+さらに`ok`をクリックすると、`(validate-form)`は`false`を返してくる様子が見えるだろう。
 
 ```bash
 ClojureScript:modern-cljs.login> (validate-form)
 false
 ClojureScript:modern-cljs.login>
 ```
-
-Fill both the `Email Address` and `Password` fields of the login
-form. At the CLJS repl prompt, call `(validate-form)` again. You should
-now see `(validate-form)` returning `true`, passing the control to the
-[original][6] server-side script which we're going to implement in a
-subsequent tutorial using CLJ.
+ログインフォームの`Email Address`と`Password`を書き込んでみよう。そして、
+ClojureScirptのReplプロンプトから、`(validate-form)`を再び呼び出してみよう。
+すすと、`(validate-form)`は`true`を返し、次のチュートリアルで使うClojureの
+[元になる][6]サーバーサイド・スクリプトに、そのコントロールを投げようとする
+様子が見れる。
 
 ```bash
 ClojureScript:modern-cljs.login> (validate-form)
@@ -255,18 +252,17 @@ true
 ClojureScript:modern-cljs.login>
 ```
 
-## Shopping calculator sample
+## ショッピング金額の計算をするサンプル
 
-Now let's try to port to CLJS a second example from Larry Ullman
-[Modern JavaScript][6] book: a kind of an e-commerce tool that will
-calculate the total of an order, including tax, and minus any discount.
+さて、Larry Ullmanの[Modern JavaScirpt][6]の本から二番目のサンプルを
+ClojureScriptに書き直してみよう。これは、商品の全体と、税込、そして
+割引率を計算する、E-コマーシャル用のツールである。
 
-### Pure HTML/CSS page
+### 純粋にHTML/CSS
 
-Here is the `shopping.html` content which is in line with
-[clojurescriptone approach][4] and [Larry Ullman][6] to keep the design
-of the HTML/CSS/images separated from the code which is going to implement
-its behaviour. Save it in `resources/public` directory.
+HTML/CSS/imagesをコードから分離しつつ、そのデザインをたもつために、[Lally Ullman][6]と
+[clojurescriptoneのアプローチ][4]の`shopping.html`の内容が下の内容である。これを
+`resources/public`ディレクトリにセーブしよう。
 
 ```html
 <!doctype html>
@@ -333,32 +329,29 @@ its behaviour. Save it in `resources/public` directory.
 </body>
 </html>
 ```
+まず始めに、ClojureScriptのコンパイルで生成する、外部JavaScriptの`js/modern.js`の
+リンクを入れておこう。フォームの`action`の値には、この時何も入れておかないことに注意しよう。
+新しいサンプルには、サーバーサイドが内からだ。
 
-As before, we included the link to `js/modern.js` external JS file which
-will be generated by the CLJS compilation. Note that this time we have
-not attached any value to the `action` attribute of the form. That's
-because in this new example there is no server-side form submission.
-
-The following picture show the rendered `shopping.html` page.
+`shoppeing.html`は、下のように表示されているはずだ。
 
 ![Shopping Page][9]
 
-### Shopping calculator CLJS code
+### 金額計算するClojureScriptのコード
 
-Now it's time to code the implementation of the shopping calculator. We
-need to read few values from the calculator form:
+ショッピングした金額計算を行うコードを書くときがきた。この計算フォームからいくつかの
+値を読み取る必要がある。
 
-* quantity
-* price per unit
-* tax rate
-* discount
+* 商品の量
+* 1つ辺りの金額
+* 税率
+* 割引
 
-We then have to calculate the total, write back the result in the form
-and return the `false` value because there is no a server-side script to
-which submit any data.
+全体の計算が終わった時、フォームの結果を書き直し、そして`false`を返す。というのは、
+データを返すためのサーバーサイドが何もないからだ。
 
-Create the `shopping.cljs` file in `src/cljs/modern_cljs` directory and
-type into it the following code
+`shopping.cljs`ファイルを`src/cljs/modern_cljs`ディレクトリに作り、そして
+下のコードをタイプしよう。
 
 ```clojure
 (ns modern-cljs.shopping
@@ -384,6 +377,7 @@ type into it the following code
 (set! (.-onload js/window) init)
 ```
 
+さっそく、いつもの通り、この小さなショッピングの計算機をコンパイルしよう。
 Let's now try our little shopping calculator as usual:
 
 ```bash
@@ -392,23 +386,21 @@ lein cljsbuild auto # in the modern-cljs directory in a new terminal
 lein trampoline cljsbuild repl-listen # in a the modern_cljs directly in a new terminal
 ```
 
-### A short trouble shooting session
+### ちょっとしたトラブルーシューティング
 
-Now visit `localhost:3000/shopping.html` and run the calculator by
-clicking the `Calculate` button. You'll receive a "Page not
-found". What's happened?
+`localhost:3000/shopping.html`に訪れて、`Calculate`ボタンを押すことで、
+計算することができる。しかし"Page not found"というのを受けとる。何が
+起こってるんだ？
 
-The received error is not so informative. We have not yet introduced
-any debugging tool to be used in such a case, so we try shooting the
-trouble with what we have in our hands: the CLJS repl connected to the
-browser (i.e. brepl). In the previous login form sample we ran the
-`(validate-form)` function from the brepl to test its behaviour. Let's
-try the same thing by evaluating the `(calculate)` function we just
-defined in `modern-cljs.shopping` namespace.
+受けとったエラーに何も手がかりはない。このようなときに、使えるデバッグツールを
+また紹介していない。だから、手探りでトラブルシューティングしてみよう。
+ClojureSCript REPLをブラウザにコネクトしよう(breplだね)。で、前のLogin formの
+サンプルと共に、breplから`(validate-form)`関数を動かして、振る舞いをテストしてみよう。
+そして、同じように`moderncljs.shopping`という名前空間で定義した`(calculate)`関数の
+評価を行ってみよう。
 
-First, click the back button of your browser to show again
-`shopping.html` page and then evaluate the following CLJS expressions
-in the brepl.
+最初に、`shopping.html`に再び戻って、Breplの中で、下のClojureScriptの式を
+評価してみよう。
 
 ```bash
 ClojureScript:cljs.user> (in-ns 'modern-cljs.shopping)
@@ -418,14 +410,14 @@ false
 ClojureScript:modern-cljs.shopping>
 ```
 
-The `calculate` functions correctly returns `false` and the `Total`
-shown by the calculator form is correct too.
+`calculate`関数は、正しく`false`を返しており、そして`Total`も計算フォームに
+正しく表示されている。
 
 ![Total][11]
 
-This means that the `calculate` function is correctly called in the
-brepl, but not by the `Calculate` button of the form. Let's see if the
-brepl may help us in investigating the problem we have.
+これが意味することは、breplの中では`caluculate`関数は正しく呼び出されている
+ということであり、しかし`Calculate`ボタンのフォームでは正しく動いていないということに
+なる。では、breplの助けにより、問題に向かってみよう。
 
 ```bash
 ClojureScript:modern-cljs.shopping> (.-onsubmit (.getElementById js/document "shoppingForm"))
@@ -433,11 +425,10 @@ nil
 ClojureScript:modern-cljs.shopping>
 ```
 
-Oops, the `onsubmit` property of `shoppingForm` form element has no
-value. `calculate` should have been set as its value by `init`
-function which, in turn, should have been set as the value of the
-`onload` property of the `window` object. Let's now see what's the
-value of the `onload` property of the `window` object.
+おっと、`shoppingForm`のフォーム要素である`onsubmit`の値がないらしい。
+`caluculate`は、`window`オブジェクトの属性である`on-load`が値として
+設定する`init`という値がセットされているべきだ。`window`オブジェクトの
+`onload`プロパティの値を見てみよう。
 
 ```bash
 ClojureScript:modern-cljs.shopping> (.-onload js/window)
@@ -459,18 +450,16 @@ ClojureScript:modern-cljs.shopping> (.-onload js/window)
 ClojureScript:modern-cljs.shopping>
 ```
 
-Oops, the `init` function assigned as value for the `window` `onload`
-property is not the one we just defined, but the `init` function we
-defined to initialize the previous `loginForm`.
+おや、`window` `onload`の値として定義した`init`関数は、一つだけに定義
+されているわけではなく、前回の`loginForm`関数にも定義されている。
 
-What just happened has to do with the Google Closure Compiler
-(i.e. cljsbuild). It gets every CLJS file from `:source-paths` keyword
-we set in the very first [tutorial][10] and compiles all of them in
-the "js/modern.js" file we set in the same tutorial as the value of
-the `:output-to` option of `lein-cljsbuild` plugin.
+これはGoogle Closure コンパイラーと使っているときに起こることだ(
+cljsbuildがそうだ)。`lein-cljsbuild`の`:output-to`オプションの値が
+、最初のチュートリアルから設定した、`source-paths`キーワードに
+ある全てのClojureScriptを取得し、そして"js/modern.js"にファイルに対して
+同じファイルになるようにセットしたのだ。
 
-To temporarily solve this problem, evaluate the `(init)` function in
-the brepl as follows:
+緊急にこの問題を解決するなら、breplで`(init)`関数を呼び出せばよい。
 
 ```bash
 ClojureScript:modern-cljs.shopping> (init)
@@ -485,8 +474,7 @@ ClojureScript:modern-cljs.shopping> (init)
 ClojureScript:modern-cljs.shopping>
 ```
 
-You can now use the *Shopping Calculator* form clicking its
-*Calculate* button.
+これで*Shipping Calculator*フォームの*Calculate*ボタンが使えるようになった。
 
 If you created a new git branch as suggested in the preamble of this
 tutorial, I suggest you to commit the changes as follows
