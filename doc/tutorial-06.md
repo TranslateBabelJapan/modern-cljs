@@ -1,12 +1,12 @@
-# Tutorial 6 - Easy made Complex and Simple made Easy
+# Tutorial 6 - 容易なことは複雑になるし、シンプルなことは簡単になる
 
-In this tutorial we are going to investigate the issue we met in the
-[latest tutorial][1] and try to solve it.
+このチュートリアルでは、前回に出会ったチュートリアルの問題を調べて、
+そのことを解決しようと思う。
 
 ## Preamble
 
-If you want to start working from the end of the [previous tutorial][1],
-assuming you've [git][9] installed, do as follows.
+もし、[前回のチュートリアル][1]を終わらせて、このチュートリアルを始めるのなら、
+[git][9]をインストールして、下のことをやるといい。
 
 ```bash
 git clone https://github.com/magomimmo/modern-cljs.git
@@ -14,17 +14,16 @@ cd modern-cljs
 git checkout tutorial-05
 git checkout -b tutorial-06-step-1
 ```
-
 ## Introduction
 
-Our latest tutorial ended with a not so nice issue. Just to recap we did as
-follows:
+前回のチュートリアルでは、あんまりいいとは言えない問題で終わった。問題は下のように
+まとめることができる。
 
-* created the `login.html` page and the corresponding `login.cljs`
-  source file;
-* created the `shopping.html` page and the corresponding
-  `shopping.cljs` source file;
-* launched the app in the usual way
+* `login.html`のページと`login.cljs`のソースファイルが対応している
+
+* `shopping.html`のページと`shopping.cljs`のソースファイルが対応している
+
+* 普段の方法でアプリを立ち上げる。 
 
 ```bash
 lein ring server # from the project home directory
@@ -32,20 +31,14 @@ lein cljsbuild auto # from the project home directory in a new terminal
 lein trampoline cljsbuild repl-listen # from the project home directory in a new terminal
 ```
 
-We than visited the [shopping][2] page in the browser and discovered
-that the `init` function we set for the `onload` property of the JS
-`window` object was not the one we defined in `shopping.cljs`, but the
-one we defined in `login.cljs`.
+ブラウザでショッピングページに訪れると、`shopping.cljs`で宣言した`、`window`オブジェクトの`onload`という属性にセットした関数である`init`ではなく、`login.cljs`で宣言されたものであることがわかる。
 
-As we anticipated in the [previous tutorial][1], this behaviour
-depends on the Google Closure Compiler driven by the `lein-cljsbuild`
-plugin.
+前回のチュートリアルで見たとおり、この振る舞いは、`lein-cljsbuild`によって使われるGoogle Closure Compilerに依存するものだ。
 
-## Introducing Google Closure Compiler (CLS)
 
-In the [first tutorial][3], we set the `:cljsbuild` keyword of
-`project.clj` to configure the Google Closure Compiler with the following
-options:
+## Google Closure Compiler 入門
+
+[最初のチュートリアル][3]で、私たちは`:cljsbuild`というキーワードで、Google Closure Compilerの振舞いを下のように変更した。
 
 ```clojure
 (defproject ....
@@ -58,40 +51,21 @@ options:
 
 ```
 
-The `:source-paths` option instructs CLS to look for any CLJS source
-code in the `src/cljs` directory structure. The `:output-to` option of
-the `:compiler` keyword instructs CLS to save the compilation result
-in `"resources/public/js/modern.js`.
+この`:source-paths`というオプションは、Closure Compilerに対して、`src/cljs`にあるディレクトリ構造から、全てのClojureScriptのソースコードを探し出してくるように指示している。また、`:compiler`の`:output-to`というキーワードは、Closure Compilerに対して、`"resources/public/js/modern.js"`にコンパイルした結果を保存するように指定している。
 
-I'm not going to explain every single detail of the CLJS/CLS pair of
-compilers. The only detail that is useful for investigating and
-eventually solving the above issue is that the pair of
-compilers generates a **single** JS file
-(e.g. `"resources/public/js/modern.js"`) from **all** of the CLJS files
-it finds in the `"src/cljs"` directory and subdirectories
-(e.g. `connect.cljs`, `login.cljs`, and `shopping.cljs`).
+　ClojureScript/Closure Compilerというコンパイラーについて一つずつ細かに説明しようとは望まない。問題を調査し、解決するために必要な詳細というのは、コンパイラが、`"src/cljs"`ディレクトリ、あるいはそのサブディレクトリにある**全ての**ClojureScriptファイル(つまり、`connect.cljs`, `login.cljs`, `shopping.cljs`のことだ)から**一つの**JavaScriptファイルを生成している(つまり `"resources/public/js/modern.js"` のことだ)ということだ。
 
-## Is mutability evil?
+## 変わりやすさは罪か?
 
-Both `login.cljs` and `shopping.cljs` had a final call to `(set!
-(.-onload js/window) init)`, which is therefore called twice: once from
-`login.cljs` and once from `shopping.cljs`. The order of these calls
-doesn't matter, because whichever comes first, the other is going to
-mutate its previous value: a clear case against JS mutable data
-structures?
+`login.cljs`も、`shopping.cljs`も、最終的に`(set! (.-onload js/window) init)`を呼び出している。これらは`logic.cljs`から一回、そして`shopping.cljs`から一回、計2回呼び出されている。これらの呼び出しは問題はない。というのは、どちちが最初にくるとしても、前回の値を上書きしてしまうからだ。JavaScriptの変化可能なデータ構造に対してクリアになるケースだ。
 
-## Easy made complex
+## 安易さは複雑さを生む
 
-From the above discussion the reader could infer that that CLJS is good only
-for a *single page browser application*. Indeed, there is a very modest solution
-to the above conflict between more calls setting the same `onload` property of
-the JS `window` object: code duplication!
+上記の問題から、読者はClojureScriptというのは*単体のブラウザアプリケーション*のときのみ有効であると感じるだろう。実際、JavaScriptの`window`オブジェクトに対して同じ`onload`の属性に変数を加してうことによる、処理の衝突を避けるための方法はある。コードを重複させてしまうことだ！
 
-You have to duplicate the directory structure and the corresponding
-build options for each html page that is going to include the single
-generated JS file.
+つまり、ディレクトリ構造を重複させ、そして、単体のJavaScriptファイルをそれぞれのHTMLに対応させる形ビルドオプションを追加する必要があるということだ。
 
-Here are the bash commands you should enter in the terminal.
+ 下にあるbashのコマンドをターミナルで叩いてみよう。
 
 ```bash
 mkdir -p src/cljs/{login/modern_cljs,shopping/modern_cljs}
@@ -102,7 +76,7 @@ cp src/cljs/modern_cljs/connect.cljs src/cljs/shopping/modern_cljs/
 rm -rf src/cljs/modern_cljs
 ```
 
-And here is the modified fragment of `project.clj`
+　そして、下のように`project.clj`を変化させてみよう。
 
 ```clojure
 (defproject ...
@@ -126,44 +100,33 @@ And here is the modified fragment of `project.clj`
       :optimizations :whitespace
       :pretty-print true}}}})
 ```
+> NOTE 1: `:cljsbuild`の設定をより深く知るために、強く薦めたいのが、
+> [lein-cljsbuild][5]のプラグインにある[advanced project.cljのサンプル][4]を読むことだ。
 
-> NOTE 1: To understand the details of the `:cljsbuild` configurations,
-> I strongly recommend you read the [advanced project.clj example][4]
-> from the [lein-cljsbuild][5] plugin.
+最終的に、それぞれのHtmlページのスクリプトのタグに正しいJavaScriptファイルを与えてあげる必要がある(要するに`"js/login.js"`は`login.html`に、`"js/shopping.js"`や`shopping.html`に、だ)。
 
-Finally you have to include the right JS file (e.g. `"js/login.js"`
-and `"js/shopping.js"` in the script tag of each html page
-(e.g. `login.html` and `shopping.html`).
+上記のような解決のことを、**複雑さが追加された**というようによく言われる。事実悪いことに、それぞれのJavaScriptのファイルが出力されると、Closure Compilerが全体のサイズをスマートにするとしても、他の難しさを呼び出してしまう。ブラウザが、キャッシュから他の全てを保存するために、最初のキャッシュを保存する手立てが無くなってしまうのだ。
 
-Most would call the above solution a kind of **incidental
-complexity**. What's worst is the fact that each emitted JS file, no
-matter how smart is the CLS compiler is in reducing the total size, is
-different from the others: there is no way for the browser to cache the first
-downloaded one to locally serve all the others from the cache.
+## シンプルさは簡単にする
 
-## Simple made easy
+今こそ、シンプルで簡単な方法を試してみよう。
 
-Now the simple made easy way:
+* `login.cljs`と`shopping.cljs`ファイルの両方から、`(set! (.-onload js/window) init)`をはずそう。
 
-* remove the call `(set! (.-onload js/window) init)` from both
-  `login.cljs` and `shopping.cljs` files;
-* add the `:export` tag to the `init` function in both `login.cljs` and
-  `shopping.cljs` files;
-* add a `script` tag calling the correponding `init` function in both
-  `login.html` and `shopping.html` files;
-* you're done.
+* そして、`:export` タグを、`login.cljs`と`shopping.cljs`の`init`関数に追加しよう。
 
-> NOTE 2: if you do not `^:export` a CLJS function, it will be subject
-> to Google Closure Compiler `:optimizations` strategies. When set to
-> `:simple` optimizations, the CLS compiler will minify the emitted
-> JS file and any local variable or function name will be shortened/obfuscated and
-> won't be available from external JS code. If a variable or function
-> name is annotated with `:export` metadata, its name is going to be
-> preserved and can be called by standard JS code. In our example the
-> two functions will be available as: `modern_cljs.login.init()` and
-> `modern_cljs.shopping.init()`.
+* `script`タグで、対応する`init`関数を、`login.html`と`shopping.html`の両方で呼び出そう。
 
-Here is the related fragment of `login.cljs`
+* 完成！
+
+> NOTE 2: でも、もしClojureScriptの関数として、`^:export`を使いたくなければ、
+> Google Closure Compilerに対して`:optimizations`という戦略を使わせることもできる。
+> `:simple`という最適化オプションを指定したら、Closure CompilerはJavaScriptを小さくしてくれるし、
+> 他のローカル変数やローカル関数の名前も小さくなり、難読かされて、外部のJavaScriptコードとして存在しなくなる。
+> もし、関数や変数の名前に`:export`というメタデータがあれば、その名前は標準的なJavaScriptのコードとして呼び出すことができる。
+> 二つの関数は、次のような形で存在することになる。`modern_cljs.login.init()`と、`modern_cljs.shopping.init()`という形である。
+
+さっそく`login.cljs`のコードの断片を見てみよう。
 
 ```clojure
 ;; the rest as before
@@ -178,7 +141,7 @@ Here is the related fragment of `login.cljs`
 ;; (set! (.-onload js/window) init)
 ```
 
-And here is the interested fragment of `shopping.cljs`
+`shopping.cljs`のコードの断片も見てみよう。
 
 ```clojure
 ;; the rest as before
@@ -191,6 +154,8 @@ And here is the interested fragment of `shopping.cljs`
 ;; (set! (.-onload js/window) init)
 
 ```
+
+これは、`login.html`のコード断片だ。
 Here is the related fragment of `login.html`
 
 ```html
@@ -198,6 +163,7 @@ Here is the related fragment of `login.html`
     <script>modern_cljs.login.init();</script>
 ```
 
+これは、`shopping.html`のコード断片だ。
 And here is the related fragment of `shopping.html`
 
 ```html
@@ -205,7 +171,7 @@ And here is the related fragment of `shopping.html`
   <script>modern_cljs.shopping.init();</script>
 ```
 
-You can now run everything as usual:
+これで普通に走らせればいい。
 
 ```bash
 lein ring server # from the project home directory
@@ -220,11 +186,9 @@ tutorial, I suggest you to commit the changes as follows
 git commit -am "Introducing domina"
 ```
 
-In a subsequent tutorial we'll introduce [domina event][6] management
-to further improve our functional style in porting
-[Modern JavaScript samples][7] to CLJS.
+今後のチュートリアルで、[Modern JavaScriptのサンプル][7]を、ClojureScriptにする、関数型スタイルを改善するための[dominaのイベント管理方法][6]を紹介する。
 
-# Next step - [Tutorial 7: Being doubly aggressive][8]
+# 次のステップ - [Tutorial 7: 二倍攻撃的にやろうぜ][8]
 
 In the [next tutorial][8] we're going to explore CLJS/CLS compilation modes by
 using the usual `lein-cljsbuild` plugin of `leiningen`.
