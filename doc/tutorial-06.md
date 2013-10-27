@@ -31,7 +31,7 @@ lein cljsbuild auto # from the project home directory in a new terminal
 lein trampoline cljsbuild repl-listen # from the project home directory in a new terminal
 ```
 
-ブラウザでショッピングページに訪れると、`shopping.cljs`で宣言した`、`window`オブジェクトの`onload`という属性にセットした関数である`init`ではなく、`login.cljs`で宣言されたものであることがわかる。
+ブラウザでショッピングページに訪れると、`shopping.cljs`で宣言した、`window`オブジェクトの`onload`という属性にセットした関数である`init`ではなく、`login.cljs`で宣言されたものであることがわかる。
 
 前回のチュートリアルで見たとおり、この振る舞いは、`lein-cljsbuild`によって使われるGoogle Closure Compilerに依存するものだ。
 
