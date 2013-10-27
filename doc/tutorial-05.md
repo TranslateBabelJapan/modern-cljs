@@ -2,14 +2,11 @@
 
 このチュートリアルでは、前回のチュートリアルで見せた、ログインフォームの
 バリテーションを改善するために、[Domina][1]を紹介する。
-In this tutorial we're going to introduce [Domina][1] to improve the
-idiomaticity of the login form validation we presented in
-the [previous tutorial][2].
 
 ## Preamble
 
-If you want to start working from the end of the [previous tutorial][2],
-assuming you've [git][13] installed, do as follows.
+もし、[前回のチュートリアル][2]を終わらせて、このチュートリアルを始めるのなら、
+[git][13]をインストールして、下のことをやるといい。
 
 ```bash
 git clone https://github.com/magomimmo/modern-cljs.git
@@ -34,10 +31,6 @@ git checkout -b tutorial-05-step-1
 ClojureScriptの中を見ていたとき、最初に[clojurescriptone][3]を見つけて、
 そして[Design and templation][4]を読んで、下の文章に対してとても納得した
 ことがある。
-
-When I first met [clojurescriptone][3] in searching for a CLJS guide,
-and read about [Design and templating][4], I found myself very much in
-agreement with the following reasoning:
 
 > 多くのClojureのウェブアプリケーションでは、HTMLテンプレートとして[Hiccup][5]
 > を使っている。プログラマーが同様にデザイナーであるならば、これは理想的である。
