@@ -414,6 +414,6 @@ License, the same as Clojure.
 [15]: https://raw.github.com/magomimmo/modern-cljs/master/doc/images/file-not-found.png
 [16]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-03.md
 [17]: https://developers.google.com/closure/compiler/
-[18]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-05.md
+[18]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-05.md
 [19]: https://github.com/levand/domina
 [20]: https://help.github.com/articles/set-up-git
