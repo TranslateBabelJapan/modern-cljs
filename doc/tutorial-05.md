@@ -495,5 +495,5 @@ License, the same as Clojure.
 [9]: https://raw.github.com/magomimmo/modern-cljs/master/doc/images/shopping.png
 [10]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-01.md
 [11]: https://raw.github.com/magomimmo/modern-cljs/master/doc/images/total.png
-[12]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-06.md
+[12]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-06.md
 [13]: https://help.github.com/articles/set-up-git

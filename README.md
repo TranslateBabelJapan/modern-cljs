@@ -28,6 +28,11 @@ ClojureScriptによるフォームバリテーションを楽しんでみよう�
 このチュートリアルでは、[domina library][13]を使って、もっとClojureっぽい
 ログインフォームのバリテーションを実現してみよう。
 
+## [Tutorial 6 - 安易なことは複雑になるし、シンプルなことは簡単になる][14]
+
+このチュートリアルでは、前回のチュートリアルにあった、あんまりよくない問題について調べ、それを解決する二つの方法を行う。
+
+
 ## 以下、もとのブランチから
 
 A series of tutorials to guide you in creating and setting up
@@ -118,15 +123,6 @@ run the latest available tutorial without coding:
 > * `git clone https://github.com/magomimmo/modern-cljs.git`
 > * `cd modern-cljs`
 > * `git checkout tutorial-01 # for tutorial 1, tutorial-02 for tutorial 2 etc `
-
-
-
-
-
-## [Tutorial 6 - Easy made Complex and Simple made Easy][14]
-
-In this tutorial we're going to investigate and solve in two different
-ways the not so nice issue we met in the last tutorial.
 
 ##  [Tutorial 7 - On being doubly aggressive][15]
 
@@ -228,7 +224,7 @@ License, the same as Clojure.
 [11]: http://www.larryullman.com/
 [12]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-05.md
 [13]: https://github.com/levand/domina
-[14]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-06.md
+[14]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-06.md
 [15]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-07.md
 [16]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-08.md
 [17]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-09.md
