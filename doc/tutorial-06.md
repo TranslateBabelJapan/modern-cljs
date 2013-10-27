@@ -156,7 +156,6 @@ rm -rf src/cljs/modern_cljs
 ```
 
 これは、`login.html`のコード断片だ。
-Here is the related fragment of `login.html`
 
 ```html
     <script src="js/modern.js"></script>
@@ -164,7 +163,6 @@ Here is the related fragment of `login.html`
 ```
 
 これは、`shopping.html`のコード断片だ。
-And here is the related fragment of `shopping.html`
 
 ```html
   <script src="js/modern.js"></script>
