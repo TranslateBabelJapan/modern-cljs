@@ -26,7 +26,6 @@ git checkout -b tutorial-05-step-1
 > CLojureの関数型的な慣習へと合わせたものです。Domina自体はどんなイノベーションを
 > しているわけではないけれども、ClojureScriptの中で自然に感じるような、Dom処理を、
 > 基本的な関数の中で使うことができるでしょう。
-> [Domina][1] is a jQuery inspired DOM manipulation library for
 
 ClojureScriptの中を見ていたとき、最初に[clojurescriptone][3]を見つけて、
 そして[Design and templation][4]を読んで、下の文章に対してとても納得した
@@ -152,7 +151,7 @@ Leiningenを普段使うとき、もしClojureやClojureScriptのライブラリ
 > 名前をつけるようになっている。
 
 > Note 3: :use や :require が名前空間で必要になったとき、ClojureScriptは、
-> :useでは :only が使えうし、また:requireで:asが使える。機能の違いについては、
+> :useでは :only が使えるし、また:requireで:asが使える。機能の違いについては、
 > [the ClojureScript Wiki][8]を見て欲しい。
 
 ## バリテーションフォームを変化させよう
@@ -371,7 +370,6 @@ HTML/CSS/imagesをコードから分離しつつ、そのデザインをたも�
 ```
 
 さっそく、いつもの通り、この小さなショッピングの計算機をコンパイルしよう。
-Let's now try our little shopping calculator as usual:
 
 ```bash
 lein ring server # in the modern-cljs home directory
@@ -476,7 +474,7 @@ tutorial, I suggest you to commit the changes as follows
 git commit -am "introducing domina"
 ```
 
-# Next Step [Tutorial 6: Easy made Complex and Simple made Easy][12]
+# Next Step [Tutorial 6: 容易なことは複雑になるし、シンプルなことは簡単になる][12]
 
 In the [next tutorial][12] we're going to investigate and solve in two
 different ways the problem we just met.
