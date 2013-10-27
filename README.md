@@ -23,6 +23,11 @@
 ログインフォームを、JavaScriptからClojureScriptに書き換えるということで、
 ClojureScriptによるフォームバリテーションを楽しんでみよう。
 
+## [Tutorial 5 - Domina入門][12]
+
+このチュートリアルでは、[domina library][13]を使って、もっとClojureっぽい
+ログインフォームのバリテーションを実現してみよう。
+
 ## 以下、もとのブランチから
 
 A series of tutorials to guide you in creating and setting up
@@ -117,10 +122,6 @@ run the latest available tutorial without coding:
 
 
 
-## [Tutorial 5 - Introducing Domina][12]
-
-In this tutorial we're going to use [domina library][13] to make our
-login form validation more clojure-ish.
 
 ## [Tutorial 6 - Easy made Complex and Simple made Easy][14]
 
@@ -225,7 +226,7 @@ License, the same as Clojure.
 [9]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-04.md
 [10]: http://www.larryullman.com/books/modern-javascript-develop-and-design/
 [11]: http://www.larryullman.com/
-[12]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-05.md
+[12]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-05.md
 [13]: https://github.com/levand/domina
 [14]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-06.md
 [15]: https://github.com/magomimmo/modern-cljs/blob/master/doc/tutorial-07.md
