@@ -207,5 +207,5 @@ License, the same as Clojure.
 [4]: http://ring-clojure.github.com/ring/
 [5]: https://github.com/weavejester/compojure.git
 [6]: http://localhost:3000/simple.html
-[7]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-03.md
+[7]: https://github.com/TranslateBabelJapan/modern-cljs/blob/japanese-translate/doc/tutorial-04.md
 [8]: https://help.github.com/articles/set-up-git
